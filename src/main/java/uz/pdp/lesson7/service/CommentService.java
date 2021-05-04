@@ -37,11 +37,16 @@ public class CommentService {
     }
 
     public ApiResponse editComment(Long id, CommentDto commentDto) {
-        Optional<Comment> byId = commentRepository.findById(id);
-        if (!byId.isPresent()){
-            return new ApiResponse("Bunday id li comment topilmadi", false);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User)authentication.getPrincipal();
+        Long createdBy = user.getId();
+
+        Optional<Comment> optionalComment = commentRepository.findByIdAndCreatedBy(id, createdBy);
+        if (!optionalComment.isPresent()){
+            return new ApiResponse("Error", false);
         }
-        Comment comment = byId.get();
+
+        Comment comment = optionalComment.get();
         comment.setText(commentDto.getText());
 
         commentRepository.save(comment);
