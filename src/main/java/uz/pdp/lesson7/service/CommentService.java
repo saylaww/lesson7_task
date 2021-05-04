@@ -49,7 +49,7 @@ public class CommentService {
         return new ApiResponse("Comment edit qilindi", true);
     }
 
-    public ApiResponse deletePost(Long id) {
+    public ApiResponse deleteComment(Long id) {
         Optional<Comment> byId = commentRepository.findById(id);
         if (!byId.isPresent()){
             return new ApiResponse("Bunday id li comment topilmadi", false);
